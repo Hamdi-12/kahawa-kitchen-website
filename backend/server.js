@@ -15,10 +15,10 @@ const userRoutes = require('./routes/users');
 const menuItemRoutes = require('./routes/menuItems');
 const uploadRoutes = require('./routes/upload');
 
-// Use routes
-app.use('/users', userRoutes);
-app.use('/menu-items', menuItemRoutes);
-app.use('/upload', uploadRoutes); // uncomment when ready
+// COMMENT OUT all route mounts for now to test
+// app.use('/users', userRoutes);
+// app.use('/menu-items', menuItemRoutes);
+// app.use('/upload', uploadRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
@@ -31,14 +31,13 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-// Default API route
-app.get('/', (req, res) => {
-  res.send('MIS Backend is Running 🚀');
+// Simple test route
+app.get('/test', (req, res) => {
+  res.send('Test route works!');
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-
 });
