@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const path = require('path');
 
 const app = express();
 
@@ -17,18 +18,27 @@ const uploadRoutes = require('./routes/upload');
 // Use routes
 app.use('/users', userRoutes);
 app.use('/menu-items', menuItemRoutes);
-app.use('/upload', uploadRoutes);
+app.use('/upload', uploadRoutes); // uncomment when ready
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ MongoDB Connected'))
-    .catch(err => console.log(err));
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch(err => console.log(err));
 
-// Test route
+// Serve static frontend files in production
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+// Default API route
 app.get('/', (req, res) => {
-    res.send('MIS Backend is Running 🚀');
+  res.send('MIS Backend is Running 🚀');
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+
+});
